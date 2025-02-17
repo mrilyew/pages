@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random OVK</title>
+</head>
+<body>
+    <style>
+        #bg {
+            background-color: #191818;
+            opacity: 0.198;
+            background-image:  linear-gradient(135deg, #626262 25%, transparent 25%), linear-gradient(225deg, #626262 25%, transparent 25%), linear-gradient(45deg, #626262 25%, transparent 25%), linear-gradient(315deg, #626262 25%, #191818 25%);
+            background-position:  12px 0, 12px 0, 0 0, 0 0;
+            background-size: 24px 24px;
+            background-repeat: repeat;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            z-index: -1;
+        }
+
+        body {
+            background: #000000;
+            font-family: tahoma;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+
+        .photo {
+            width: 100vw;
+            height: 75vh;
+            display: flex;
+            justify-content: center;
+            padding: 38px 0px 20px 0px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: pointer;
+        }
+
+        .buttons input {
+            cursor: pointer;
+            width: 100px;
+            height: 50px;
+            background: #401919;
+            color: white;
+        }
+    </style>
+
+    <script>
+        function random_int(min, max) {
+            return Math.round(Math.random() * (max - min) + min)
+        }
+
+        function random_photo() {
+            const domain = "https://ovk.to"
+            const size = "medium"
+            const format = "jpeg"
+
+            const min = 0
+            const max = 140700
+            const rand = random_int(min, max)
+            
+            const old_photos = (localStorage.getItem("photos") ?? "").split(",")
+            old_photos.push(rand)
+            localStorage.setItem("photos", old_photos.join(","))
+
+            return domain + "/" + `/photos/thumbnails/${rand}_${size}.${format}`
+        }
+
+        function change_photo() {
+            const prev = document.querySelector(".photo img").src
+            const rand_photo = random_photo()
+            console.log(rand_photo.replace("medium", "original"))
+            document.querySelector(".photo img").src = rand_photo
+            document.querySelector(".buttons #current").href = rand_photo.replace("medium", "original")
+            document.querySelector('.buttons #previous').href = prev.replace("medium", "original")
+        }
+
+        function getCount() {
+            return localStorage.getItem("photos").split(",")
+        }
+    </script>
+    
+    <div id="bg"></div>
+    <div class="photo">
+        <img onclick="change_photo()" onerror="change_photo()" src="https://i.sstatic.net/zEmgj.jpg" alt="">
+    </div>
+    <div class="buttons">
+        <span>Random OVK</span>
+
+        <div>
+            <a id="previous" target="_blank"><input type="button" value="Previous"></a>
+            <a id="current" target="_blank"><input id="random" type="button" value="Open original"></a>
+        </div>
+    </div>
+
+    <script>
+        change_photo()
+    </script>
+</body>
+</html>
